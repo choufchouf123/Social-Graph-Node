@@ -10,4 +10,5 @@ public class UserConnections : MonoBehaviour
 
     public int UserIdA { get; set; }
     public int UserIdB { get; set; }
+    public string ConnectionType { get; set; }
 }
