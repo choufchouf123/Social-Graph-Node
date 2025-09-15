@@ -16,7 +16,7 @@ public class DataBaseManager : MonoBehaviour
 
         //Creates the database and resets it if it already exists
         string dbPath = Path.Combine(Application.persistentDataPath, "SocialNodeGraph.db");
-        //if (File.Exists(dbPath)) File.Delete(dbPath);
+        if (File.Exists(dbPath)) File.Delete(dbPath);
         db = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
 
         db.Execute("PRAGMA foreign_keys = ON;");
@@ -57,15 +57,20 @@ public class DataBaseManager : MonoBehaviour
         return db.Table<User>().Where(user => user.Name == pName).ToList();
     }
     public List<UserConnections> GetUserConnections(User pUser) {
-        return db.Table<UserConnections>().Where(userCo => userCo.UserIdA == pUser.Id || userCo.UserIdB == pUser.Id).ToList();
+        return db.Table<UserConnections>().Where(userCo => userCo.UserIdA == pUser.Id).ToList();
     }
     //return all users connected to the given user
     public List<User> GetUsersConnectedToUser(User pUser) {
 
         List<int> lConnectionIds  = db.Table<UserConnections>().Where(userCo => userCo.UserIdA == pUser.Id).Select(userCo => userCo.UserIdB).ToList();
-        return db.Table<User>().Where(user => lConnectionIds.Contains(user.Id)).ToList();
-    }
 
+        List<User> lConnectedUsers = new List<User>();
+        foreach (int id in lConnectionIds) {
+            lConnectedUsers.Add(db.Find<User>(id));
+        }
+        //print(lConnectedUsers.Count);
+        return lConnectedUsers;
+    }
     public void CreateRandomUsersAndConnections() {
         var userIds = new List<int>();
 
@@ -84,7 +89,7 @@ public class DataBaseManager : MonoBehaviour
             // Avoid self-connections and duplicate entries
             if (userAId != userBId) {
                 AddUserConnection(db.Find<User>(userAId), db.Find<User>(userBId));
-                print(userAId + " - " + userBId);
+                //print(userAId + " - " + userBId);
             }
             else
                 i--; // retry

@@ -14,13 +14,13 @@ public class DataBaseVisualizer : MonoBehaviour
 
         foreach (User user in lAllUserList) {
             List<User> connectedUsers = DataBaseManager.instance.GetUsersConnectedToUser(user);
-            List<UserConnections> lConnectionsTest = DataBaseManager.instance.GetUserConnections(user);
+            //List<UserConnections> lConnectionsTest = DataBaseManager.instance.GetUserConnections(user);
             GameObject userNode = Instantiate(userNodeObj, transform);
             userNode.name = user.Name;
             userNode.transform.localScale *= (10 + connectedUsers.Count) / 10f;
             userNode.transform.localPosition = new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), 0);
-            //print(connectedUsers.Count);
-            print(lConnectionsTest.Count);
+            print(connectedUsers.Count);
+            //print(lConnectionsTest.Count);
         }
     }
 }
