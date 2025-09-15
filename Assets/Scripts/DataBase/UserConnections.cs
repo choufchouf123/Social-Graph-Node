@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserConnections : MonoBehaviour
+public class UserConnections
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
