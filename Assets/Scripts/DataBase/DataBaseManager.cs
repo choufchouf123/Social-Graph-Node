@@ -14,13 +14,16 @@ public class DataBaseManager : MonoBehaviour
     private void Awake() {
         instance = this;
 
+        //Creates the database and resets it if it already exists
         string dbPath = Path.Combine(Application.persistentDataPath, "SocialNodeGraph.db");
+        //if (File.Exists(dbPath)) File.Delete(dbPath);
         db = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
 
         db.Execute("PRAGMA foreign_keys = ON;");
 
         CreateTables();
-        
+
+        CreateRandomUsersAndConnections();
         EventManager.eventDataBaseSetupFinished?.Invoke();
     }
 
@@ -34,6 +37,12 @@ public class DataBaseManager : MonoBehaviour
         return user.Id;
     }
     public UserConnections AddUserConnection(User pUserA, User pUserB) {
+        // Prevent self-connection
+        if (pUserA.Id == pUserB.Id) { 
+            Debug.LogWarning("Cannot create a connection to oneself.");
+            return null; 
+        }
+
         var userConnection = new UserConnections { UserIdA = pUserA.Id, UserIdB = pUserB.Id };
         db.Insert(userConnection);
         return userConnection;
@@ -50,10 +59,38 @@ public class DataBaseManager : MonoBehaviour
     public List<UserConnections> GetUserConnections(User pUser) {
         return db.Table<UserConnections>().Where(userCo => userCo.UserIdA == pUser.Id || userCo.UserIdB == pUser.Id).ToList();
     }
+    //return all users connected to the given user
     public List<User> GetUsersConnectedToUser(User pUser) {
 
         List<int> lConnectionIds  = db.Table<UserConnections>().Where(userCo => userCo.UserIdA == pUser.Id).Select(userCo => userCo.UserIdB).ToList();
         return db.Table<User>().Where(user => lConnectionIds.Contains(user.Id)).ToList();
+    }
+
+    public void CreateRandomUsersAndConnections() {
+        var userIds = new List<int>();
+
+        // Create 10 random users
+        for (int i = 0; i < 10; i++) {
+            string randomName = "User" + Random.Range(1, 1000); // random name
+            int id = AddUser(randomName);
+            userIds.Add(id);
+        }
+
+        // Create 23 random connections
+        for (int i = 0; i < 23; i++) {
+            int userAId = userIds[Random.Range(0, userIds.Count)];
+            int userBId = userIds[Random.Range(0, userIds.Count)];
+
+            // Avoid self-connections and duplicate entries
+            if (userAId != userBId) {
+                AddUserConnection(db.Find<User>(userAId), db.Find<User>(userBId));
+                print(userAId + " - " + userBId);
+            }
+            else
+                i--; // retry
+        }
+
+        Debug.Log("Created 10 random users and 23 random connections.");
     }
 
 }
