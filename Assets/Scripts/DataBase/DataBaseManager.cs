@@ -75,14 +75,14 @@ public class DataBaseManager : MonoBehaviour
         var userIds = new List<int>();
 
         // Create 10 random users
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             string randomName = "User" + Random.Range(1, 1000); // random name
             int id = AddUser(randomName);
             userIds.Add(id);
         }
 
         // Create 23 random connections
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < 200; i++) {
             int userAId = userIds[Random.Range(0, userIds.Count)];
             int userBId = userIds[Random.Range(0, userIds.Count)];
 

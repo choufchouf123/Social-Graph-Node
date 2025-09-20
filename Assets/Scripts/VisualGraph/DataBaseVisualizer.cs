@@ -34,14 +34,14 @@ public class DataBaseVisualizer : MonoBehaviour
             List<UserConnections> lConnectionsToUser = DataBaseManager.instance.GetUserConnections(user);
 
             //Scale the user node based on the number of connections
-            _userNodes[user.Id].transform.localScale *= 1 + (lConnectionsToUser.Count * 0.2f);
+            _userNodes[user.Id].transform.localScale *= 1 + (lConnectionsToUser.Count * 0.5f);
 
             //Create a line between the user and each connection
             foreach (UserConnections connection in lConnectionsToUser) {
 
                 User connectedUser = DataBaseManager.instance.GetUserById(connection.UserIdB);
 
-                if (_userNodes.ContainsKey(user.Id)) return;
+                if (!_userNodes.ContainsKey(user.Id)) return;
                 VisualLineConnecter line = Instantiate(_connectionLineObj, transform);
                 line.pointA = _userNodes[user.Id].transform;
                 line.pointB = _userNodes[connectedUser.Id].transform;
