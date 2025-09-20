@@ -66,7 +66,7 @@ public class DataBaseManager : MonoBehaviour
 
         List<User> lConnectedUsers = new List<User>();
         foreach (int id in lConnectionIds) {
-            lConnectedUsers.Add(db.Find<User>(id));
+            lConnectedUsers.Add(GetUserById(id));
         }
         //print(lConnectedUsers.Count);
         return lConnectedUsers;

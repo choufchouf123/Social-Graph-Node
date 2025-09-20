@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3ed942549937c42a077fecdf286d5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userNodeObj: {fileID: 6715494675767091097, guid: af1638eddcd78d144a6d4ee9300e672e, type: 3}
+  _userNodeObj: {fileID: 6715494675767091097, guid: af1638eddcd78d144a6d4ee9300e672e, type: 3}
+  _connectionLineObj: {fileID: 4873997801791935624, guid: 3f88b395a49135941b38dee415e01566, type: 3}
 --- !u!4 &499965330
 Transform:
   m_ObjectHideFlags: 0
